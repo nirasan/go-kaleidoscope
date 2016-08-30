@@ -8,33 +8,6 @@ import (
 	"time"
 )
 
-type Position struct {
-	X, Y int
-}
-
-type Circle struct {
-	*Position
-	R     int
-	Color color.RGBA
-}
-
-func (c *Circle) Contain(x, y int) bool {
-	r := math.Sqrt(math.Pow(float64(x-c.Position.X), 2) + math.Pow(float64(y-c.Position.Y), 2))
-	return r <= float64(c.R)
-}
-
-type Rect struct {
-	*Position
-	W, H  int
-	Color color.RGBA
-}
-
-func (r *Rect) Contain(x, y int) bool {
-	x1, y1 := r.Position.X-r.W/2, r.Position.Y-r.H/2
-	x2, y2 := x1+r.W, y1+r.H
-	return x1 <= x && x <= x2 && y1 <= y && y <= y2
-}
-
 var (
 	defaultWidth           = 300
 	defaultHeight          = 300
@@ -44,6 +17,7 @@ var (
 	defaultNum             = 30
 )
 
+// 万華鏡画像生成
 func CreateImage(w, n int) *image.RGBA {
 
 	rand.Seed(time.Now().UnixNano())
@@ -164,4 +138,31 @@ func getDegree(r float64, x1, y1, x2, y2, x3, y3 int) (float64, bool) {
 		return deg, true
 	}
 	return 0, false
+}
+
+type Position struct {
+	X, Y int
+}
+
+type Circle struct {
+	*Position
+	R     int
+	Color color.RGBA
+}
+
+func (c *Circle) Contain(x, y int) bool {
+	r := math.Sqrt(math.Pow(float64(x-c.Position.X), 2) + math.Pow(float64(y-c.Position.Y), 2))
+	return r <= float64(c.R)
+}
+
+type Rect struct {
+	*Position
+	W, H  int
+	Color color.RGBA
+}
+
+func (r *Rect) Contain(x, y int) bool {
+	x1, y1 := r.Position.X-r.W/2, r.Position.Y-r.H/2
+	x2, y2 := x1+r.W, y1+r.H
+	return x1 <= x && x <= x2 && y1 <= y && y <= y2
 }
