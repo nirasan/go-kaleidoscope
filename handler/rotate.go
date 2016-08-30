@@ -25,9 +25,12 @@ func Rotate(w http.ResponseWriter, r *http.Request) {
 		for y := 50; y < 100; y++ {
 			for _, deg := range []float64{90, -90} {
 				rad := deg * math.Pi / 180
+				// 中心点の分移動
 				x1, y1 := float64(x-50), float64(y-50)
+				// 座標の回転
 				x2 := x1*math.Cos(rad) - y1*math.Sin(rad)
 				y2 := x1*math.Sin(rad) + y1*math.Cos(rad)
+				// 中心点の分もどす
 				x3, y3 := int(x2+50), int(y2+50)
 				img.Pix[y3*img.Stride+x3] = img.Pix[y*img.Stride+x]
 			}

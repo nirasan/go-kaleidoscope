@@ -8,16 +8,15 @@ import (
 	"net/http"
 )
 
-var (
-	width           = 300
-	height          = 300
-	centerX         = 150
-	centerY         = 150
-	sectorR float64 = 100
-	sectorD float64 = 30
-)
-
 func Sector(w http.ResponseWriter, r *http.Request) {
+	var (
+		width           = 300
+		height          = 300
+		centerX         = 150
+		centerY         = 150
+		sectorR float64 = 100
+		sectorD float64 = 30
+	)
 	colors := []color.NRGBA{
 		color.NRGBA{0, 0, 0, 255},
 		color.NRGBA{128, 128, 128, 255},

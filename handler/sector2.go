@@ -11,6 +11,13 @@ import (
 // Sector のピクセル抜けの修正
 // http://homepage2.nifty.com/tsugu/sotuken/rotation/#bi_liner
 func Sector2(w http.ResponseWriter, r *http.Request) {
+	var (
+		width           = 300
+		height          = 300
+		centerX         = 150
+		centerY         = 150
+		sectorR float64 = 100
+	)
 	colors := []color.NRGBA{
 		color.NRGBA{0, 0, 0, 255},
 		color.NRGBA{128, 128, 128, 255},
@@ -33,6 +40,7 @@ func Sector2(w http.ResponseWriter, r *http.Request) {
 					if degree < deg-30 || deg+30 <= degree {
 						continue
 					}
+					// 180 度以上は逆回転させる
 					if x < centerX {
 						deg *= -1
 					}
