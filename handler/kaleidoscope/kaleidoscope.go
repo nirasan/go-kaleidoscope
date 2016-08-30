@@ -7,6 +7,7 @@ import (
 	"math"
 	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type Position struct {
@@ -37,20 +38,53 @@ func (r *Rect) Contain(x, y int) bool {
 }
 
 var (
-	width           = 300
-	height          = 300
-	centerX         = 150
-	centerY         = 150
-	sectorR float64 = 145
+	defaultWidth           = 300
+	defaultHeight          = 300
+	defaultCenterX         = 150
+	defaultCenterY         = 150
+	defaultSectorR float64 = 145
 )
 
 func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
+
+	width := defaultWidth
+	height := defaultHeight
+	centerX := defaultCenterX
+	centerY := defaultCenterY
+	sectorR := defaultSectorR
+
+	q := r.URL.Query()
+
+	// 画像サイズ
+	if ws := q.Get("w"); ws != "" {
+		var err error
+		width, err = strconv.Atoi(ws)
+		if err != nil {
+			http.Error(w, "Invalid w parameter, must be an integer", http.StatusBadRequest)
+			return
+		}
+		height = width
+		centerX = width / 2
+		centerY = height / 2
+		sectorR = float64(centerX) * 0.9
+	}
+
+	// 生成要素数
+	num := 30
+	if ns := q.Get("n"); ns != "" {
+		var err error
+		num, err = strconv.Atoi(ns)
+		if err != nil {
+			http.Error(w, "Invalid n parameter, must be an integer", http.StatusBadRequest)
+			return
+		}
+	}
 
 	rectList := []Rect{}
 	circleList := []Circle{}
 
 	// 丸と四角の生成
-	for i := 0; i < 30; i++ {
+	for i := 0; i < num; i++ {
 		rect := Rect{
 			Position: &Position{X: rand.Intn(width), Y: rand.Intn(height)},
 			Color:    randomColor(),
