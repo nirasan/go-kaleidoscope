@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type Position struct {
@@ -46,6 +47,8 @@ var (
 )
 
 func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
+
+	rand.Seed(time.Now().UnixNano())
 
 	width := defaultWidth
 	height := defaultHeight
