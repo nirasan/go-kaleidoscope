@@ -3,11 +3,8 @@ package kaleidoscope
 import (
 	"image"
 	"image/color"
-	"image/png"
 	"math"
 	"math/rand"
-	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -44,9 +41,10 @@ var (
 	defaultCenterX         = 150
 	defaultCenterY         = 150
 	defaultSectorR float64 = 145
+	defaultNum             = 30
 )
 
-func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
+func CreateImage(w, n int) *image.RGBA {
 
 	rand.Seed(time.Now().UnixNano())
 
@@ -56,16 +54,9 @@ func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
 	centerY := defaultCenterY
 	sectorR := defaultSectorR
 
-	q := r.URL.Query()
-
 	// 画像サイズ
-	if ws := q.Get("w"); ws != "" {
-		var err error
-		width, err = strconv.Atoi(ws)
-		if err != nil {
-			http.Error(w, "Invalid w parameter, must be an integer", http.StatusBadRequest)
-			return
-		}
+	if w != 0 {
+		width = w
 		height = width
 		centerX = width / 2
 		centerY = height / 2
@@ -73,14 +64,9 @@ func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 生成要素数
-	num := 30
-	if ns := q.Get("n"); ns != "" {
-		var err error
-		num, err = strconv.Atoi(ns)
-		if err != nil {
-			http.Error(w, "Invalid n parameter, must be an integer", http.StatusBadRequest)
-			return
-		}
+	num := defaultNum
+	if n != 0 {
+		num = n
 	}
 
 	rectList := []Rect{}
@@ -152,8 +138,7 @@ func Kaleidoscope(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Set("Content-Type", "image/png")
-	png.Encode(w, img2)
+	return img2
 }
 
 func randomColor() color.RGBA {
@@ -162,14 +147,6 @@ func randomColor() color.RGBA {
 		G: uint8(rand.Intn(255)),
 		B: uint8(rand.Intn(255)),
 		A: 255,
-	}
-}
-
-func addColor(c1, c2 color.RGBA) color.RGBA {
-	return color.RGBA{
-		R: c1.R + c2.R,
-		G: c1.G + c2.G,
-		B: c1.B + c2.B,
 	}
 }
 
