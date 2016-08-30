@@ -5,6 +5,7 @@ import (
 	"github.com/nirasan/go-kaleidoscope/handler/kaleidoscope"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -14,5 +15,9 @@ func main() {
 	http.HandleFunc("/rotate", handler.Rotate)
 	http.HandleFunc("/sector", handler.Sector)
 	http.HandleFunc("/sector2", handler.Sector2)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
